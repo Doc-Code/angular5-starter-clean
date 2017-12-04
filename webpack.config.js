@@ -1,10 +1,11 @@
 var path = require('path');
 var webpack = require('webpack');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var UglifyJSPlugin = require('uglifyjs-webpack-plugin'); // плагин минимизации
 module.exports = {
     entry: {
         'polyfills': './dev/polyfills.ts',
-        'app': './dev/main.ts'
+        'app': './dev/main.ts',
     },
     output:{
         path: path.resolve(__dirname, './public'),     // путь к каталогу выходных файлов - папка public
@@ -18,6 +19,7 @@ module.exports = {
         rules:[   //загрузчик для ts
             {
                 test: /\.ts$/, // определяем тип файлов
+
                 use: [
                     {
                         loader: 'awesome-typescript-loader',
@@ -25,6 +27,11 @@ module.exports = {
                     } ,
                     'angular2-template-loader'
                 ]
+            },
+            {
+                test   : /\.sass$/,
+                exclude: /node_modules/,
+                loader : 'style-loader!css-loader!sass-loader'
             }
         ]
     },
@@ -37,6 +44,7 @@ module.exports = {
         new webpack.optimize.CommonsChunkPlugin({
             name: ['app', 'polyfills']
         }),
+        // new ExtractTextPlugin('./styles.css'),
         new UglifyJSPlugin()
     ]
 }
